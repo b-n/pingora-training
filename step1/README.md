@@ -1,18 +1,18 @@
 # Hello Pingora
 
-1. Create the new project
+## 1. Create the new project
 
 ```sh
 cargo new lb
 ```
 
-2. Add pingora dependency
+## 2. Add pingora dependency
 
 ```toml
 pingora = { version = "0.2" }
 ```
 
-3. Add boilerplate server code
+## 3. Add boilerplate server code
 
 ```rs
 use pingora::server::Server;
@@ -25,6 +25,6 @@ fn main() {
 }
 ```
 
-4. Run it `cargo run`
+## 4. Run it `cargo run`
 
 Congrats it should compile, and it'll run. But this server does absolutely nothing

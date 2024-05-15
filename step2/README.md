@@ -1,6 +1,6 @@
 # Load balance
 
-1. Add/Change dependencies
+## 1. Add/Change dependencies
 
 - Add async-trait
 - Add `lb` feature to pingora
@@ -10,7 +10,7 @@ pingora = { version = "0.2", features = ["lb"] }
 async-trait = { version = "0.1" }
 ```
 
-2. Create a load balancing service
+## 2. Create a load balancing service
 
 - The service will return an upstream peer
 - The peer is retrieved from the loadbalancer which we will select using roundrobin
@@ -61,7 +61,7 @@ impl ProxyHttp for LBService {
 
 Note: We do nothing with the incoming request (Session) or the context object at this stage.
 
-3. Add the service to the server
+## 3. Add the service to the server
 
 ```rs
 fn main {
@@ -85,7 +85,7 @@ fn main {
 }
 ```
 
-4. Run our proxy
+## 4. Run our proxy
 
 ```sh
 cargo run 
@@ -106,7 +106,7 @@ Selected upstream: Backend { addr: Inet(1.0.0.1:443), weight: 1 }
 Selected upstream: Backend { addr: Inet(1.1.1.1:443), weight: 1 }
 ```
 
-5. Load test it with `oha`
+## 5. Load test it with `oha`
 
 ```sh
 oha -z 5s http://localhost:8001

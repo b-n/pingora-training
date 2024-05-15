@@ -1,0 +1,11 @@
+[package]
+name = "lb-example"
+version = "0.1.0"
+edition = "2021"
+
+[workspace]
+members = ["step1", "step2"]
+
+[dependencies]
+async-trait="0.1"
+pingora = { version = "0.2", features = ["lb"]}

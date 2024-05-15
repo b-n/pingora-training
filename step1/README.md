@@ -1,18 +1,26 @@
 # Hello Pingora
 
-## 1. Create the new project
+The below assumes you already have a working rust toolchain (e.g. you can run `cargo`).
+
+## 1. Create a new project
 
 ```sh
-cargo new lb
+cargo new pingora
+cd pingora
 ```
 
-## 2. Add pingora dependency
+## 2. Add pingora dependency to Cargo.toml
+
+`Cargo.toml`:
 
 ```toml
+[dependencies]
 pingora = { version = "0.2" }
 ```
 
 ## 3. Add boilerplate server code
+
+`src/main.rs`:
 
 ```rs
 use pingora::server::Server;
@@ -25,6 +33,10 @@ fn main() {
 }
 ```
 
-## 4. Run it `cargo run`
+## 4. Run it!
 
-Congrats it should compile, and it'll run. But this server does absolutely nothing
+```sh
+cargo run
+```
+
+Congrats it should compile, and it should run. This server does absolutely nothing though, so it's not helpful [yet!].

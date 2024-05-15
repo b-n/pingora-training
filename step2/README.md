@@ -1,11 +1,14 @@
 # Load balance
 
+Add a simple load balancer to the server 
+
 ## 1. Add/Change dependencies
 
 - Add async-trait
 - Add `lb` feature to pingora
 
 ```toml
+[dependencies]
 pingora = { version = "0.2", features = ["lb"] }
 async-trait = { version = "0.1" }
 ```
@@ -59,7 +62,7 @@ impl ProxyHttp for LBService {
 
 👆 The ProxyHttp impl is needed to turn the LoadBalancer into a service. It's main use it to select a peer from the inner Loadbalancer.
 
-Note: We do nothing with the incoming request (Session) or the context object at this stage.
+Note: We do nothing with the incoming request (`Session`) or the context object at this stage.
 
 ## 3. Add the service to the server
 
@@ -85,13 +88,15 @@ fn main {
 }
 ```
 
+Block scoping the service is here just to clarify where and what structures are being created.
+
 ## 4. Run our proxy
 
 ```sh
 cargo run 
 ```
 
-And curl it
+And curl a couple of times in a terminal somewhere:
 
 ```sh
 curl http://localhost:8001/
@@ -106,7 +111,13 @@ Selected upstream: Backend { addr: Inet(1.0.0.1:443), weight: 1 }
 Selected upstream: Backend { addr: Inet(1.1.1.1:443), weight: 1 }
 ```
 
+👆 As you can see, the server being selected is cycling between each upstream every time we make a call (Round robin selection).
+
 ## 5. Load test it with `oha`
+
+⚠ You are going to create some load on the cloudflare dns servers (it's probably insignificant to them, but still important to know just the same).
+
+If you don't have `oha`, you can install it with `cargo install oha`.
 
 ```sh
 oha -z 5s http://localhost:8001

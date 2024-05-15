@@ -1,0 +1,21 @@
+---
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    assignees:
+      - b-n
+  - package-ecosystem: cargo
+    directory: "/"
+    schedule:
+      interval: monthly
+    allow:
+      - dependency-type: "all"
+    groups:
+      cargo-deps:
+        patterns:
+          - "*"
+    assignees:
+      - b-n

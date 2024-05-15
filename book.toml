@@ -1,0 +1,11 @@
+[book]
+title = "Pingora code along"
+authors = ["Ben Naylor (nayben@gmail.com)"]
+description = "A code along for the Pingora quick start"
+src = "."
+language = "en"
+text-direction = "ltr"
+
+[rust]
+edition = "2021"
+

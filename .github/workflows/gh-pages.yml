@@ -1,0 +1,38 @@
+name: github pages
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup mdBook
+        uses: peaceiris/actions-mdbook@v2
+        with:
+          mdbook-version: '0.4.37'
+
+      - name: Build the book
+        run: mdbook build
+
+      - name: Upload-artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: ./build
+
+      - name: Publish Pages
+        uses: actions/deploy-pages@v2

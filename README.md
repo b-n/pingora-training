@@ -14,4 +14,4 @@ Everything you need should be documented in each step. If you get stuck, full wo
 
 [1]: https://github.com/b-n/pingora-training
 [2]: https://b-n.github.io/pingora-testing
-[2]: https://github.com/cloudflare/pingora/blob/main/docs/quick_start.md 
+[3]: https://github.com/cloudflare/pingora/blob/main/docs/quick_start.md 

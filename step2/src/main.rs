@@ -4,9 +4,10 @@ use pingora::proxy::{http_proxy_service, ProxyHttp, Session};
 use pingora::server::Server;
 use pingora::upstreams::peer::HttpPeer;
 use pingora::Result;
+use std::sync::Arc;
 
 pub struct LBService {
-    balancer: LoadBalancer<RoundRobin>,
+    balancer: Arc<LoadBalancer<RoundRobin>>,
     name: String,
 }
 
@@ -33,18 +34,22 @@ impl ProxyHttp for LBService {
 fn main() {
     let mut server = Server::new(None).unwrap();
 
-    let service = {
+    let upstreams = {
         let upstreams = LoadBalancer::try_from_iter(["1.1.1.1:443", "1.0.0.1:443"]).unwrap();
+        Arc::new(upstreams)
+    };
+
+    let proxy_service = {
         let service = LBService {
             name: "one.one.one.one".to_string(),
             balancer: upstreams,
         };
-        let mut lb = http_proxy_service(&server.configuration, service);
-        lb.add_tcp("0.0.0.0:8001");
-        lb
+        let mut proxy = http_proxy_service(&server.configuration, service);
+        proxy.add_tcp("0.0.0.0:8001");
+        proxy
     };
 
-    server.add_service(service);
+    server.add_service(proxy_service);
 
     server.bootstrap();
     server.run_forever();

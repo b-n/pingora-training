@@ -25,13 +25,14 @@ use pingora::lb::{selection::RoundRobin, LoadBalancer};
 use pingora::proxy::{ProxyHttp, Session};
 use pingora::upstreams::peer::HttpPeer;
 use pingora::Result;
+use std::sync::Arc;
 ```
 
 Our service struct:
 
 ```rs
 pub struct LBService {
-    balancer: LoadBalancer<RoundRobin>,
+    balancer: Arc<LoadBalancer<RoundRobin>>,
     name: String,
 }
 ```
@@ -67,28 +68,31 @@ Note: We do nothing with the incoming request (`Session`) or the context object 
 ## 3. Add the service to the server
 
 ```rs
-fn main {
-    // ...
+fn main() {
+    // ..
+    let upstreams = {
+        let lb = LoadBalancer::try_from_iter(["1.1.1.1:443", "1.0.0.1:443"]).unwrap();
+        Arc::new(lb)
+    }
 
-    let service = {
-        let upstreams = LoadBalancer::try_from_iter(["1.1.1.1:443", "1.0.0.1:443"]).unwrap();
+    let proxy_service = {
         let service = LBService {
             name: "one.one.one.one".to_string(),
             balancer: upstreams,
         };
-        let mut lb = http_proxy_service(&server.configuration, service);
-        lb.add_tcp("0.0.0.0:8001");
-        lb
+        let mut proxy = http_proxy_service(&server.configuration, Arc::new(service));
+        proxy.add_tcp("0.0.0.0:8001");
+        proxy
     };
 
-    server.add_service(service);
+    server.add_service(proxy_service);
 
-    // ...
+    // ..
     server.run_forever();
 }
 ```
 
-Block scoping the service is here just to clarify where and what structures are being created.
+Block scoping the upstream/service is here just to clarify for later use.
 
 ## 4. Run our proxy
 
@@ -120,5 +124,5 @@ Selected upstream: Backend { addr: Inet(1.1.1.1:443), weight: 1 }
 If you don't have `oha`, you can install it with `cargo install oha`.
 
 ```sh
-oha -z 5s http://localhost:8001
+oha -z 1s http://localhost:8001
 ```

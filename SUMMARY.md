@@ -2,7 +2,11 @@
 
 [Introduction](README.md)
 
-# Code alongs
+# The initial setups
 
 - [Hello Pingora](step1/README.md)
 - [Load balance](step2/README.md)
+
+# Add functionality
+
+- [Health checks](step3/README.md)

@@ -11,3 +11,4 @@
 
 - [Health checks](step3/README.md)
 - [CLI Options](step4/README.md)
+- [Prometheus Metrics](step5/README.md)

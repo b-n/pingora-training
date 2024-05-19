@@ -1,0 +1,10 @@
+[package]
+name = "step4"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+pingora = { version = "0.2", features = ["lb"] }
+async-trait = { version = "0.1" }
+env_logger = { version = "0.11.3" }
+structopt = { version = "0.3" }

@@ -10,3 +10,4 @@
 # Add functionality
 
 - [Health checks](step3/README.md)
+- [CLI Options](step4/README.md)

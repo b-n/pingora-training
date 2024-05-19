@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [workspace]
-members = ["step1", "step2"]
+members = ["step1", "step2", "step3", "step4"]
 
 [dependencies]
 async-trait="0.1"

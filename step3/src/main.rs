@@ -35,6 +35,7 @@ impl ProxyHttp for LBService {
 
 fn main() {
     let mut server = Server::new(None).unwrap();
+    server.bootstrap();
 
     let (health_check, upstreams) = {
         let mut upstreams: LoadBalancer<_> =
@@ -62,6 +63,5 @@ fn main() {
 
     server.add_service(service);
 
-    server.bootstrap();
     server.run_forever();
 }

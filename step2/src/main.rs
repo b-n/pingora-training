@@ -33,6 +33,7 @@ impl ProxyHttp for LBService {
 
 fn main() {
     let mut server = Server::new(None).unwrap();
+    server.bootstrap();
 
     let upstreams = {
         let upstreams = LoadBalancer::try_from_iter(["1.1.1.1:443", "1.0.0.1:443"]).unwrap();
@@ -51,6 +52,5 @@ fn main() {
 
     server.add_service(proxy_service);
 
-    server.bootstrap();
     server.run_forever();
 }

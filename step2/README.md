@@ -87,7 +87,6 @@ fn main() {
 
     server.add_service(proxy_service);
 
-    // ..
     server.run_forever();
 }
 ```

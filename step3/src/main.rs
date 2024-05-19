@@ -45,9 +45,9 @@ fn main() {
         upstreams.set_health_check(health_check);
         upstreams.health_check_frequency = Some(Duration::from_secs(1));
 
-        let health_check = background_service("health check", upstreams);
-        let health_checked_upstreams = health_check.task();
-        (health_check, health_checked_upstreams)
+        let health_check_service = background_service("health check", upstreams);
+        let health_checked_upstreams = health_check_service.task();
+        (health_check_service, health_checked_upstreams)
     };
     server.add_service(health_check);
 

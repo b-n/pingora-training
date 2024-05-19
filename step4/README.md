@@ -23,7 +23,13 @@ fn main() {
 
 ## 2. Enable the server to accept CLI Options 
 
-Add a new dependencies:
+Add `structopt` dependency:
+
+```toml
+structopt = { version = "0.3" }
+```
+
+Import some new dependencies:
 
 ```rs
 use pingora::server::{configuration::Opt, Server};

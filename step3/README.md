@@ -26,8 +26,17 @@ You should see two of the requests return a 403, and the last one a 502
 
 ## 2. Add a TCP Healthcheck
 
+Add the new dependencies:
+
 ```rs
 use pingora::lb::health_check::TcpHealthCheck;
+use pingora::services::background::background_service;
+use std::time::Duration;
+```
+
+And change the upstreams as follows:
+
+```rs
 // ..
 fn main() {
     // ..
@@ -39,8 +48,8 @@ fn main() {
         upstreams.set_health_check(health_check);
         upstreams.health_check_frequency = Some(Duration::from_secs(1));
 
-        let _health_check = background_service("health check", upstreams);
-        let health_checked_upstreams = health_check.task();
+        let health_check_service = background_service("health check", upstreams);
+        let health_checked_upstreams = health_check_service.task();
         health_checked_upstreams
     };
 ```

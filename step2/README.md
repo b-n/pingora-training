@@ -21,8 +21,9 @@ async-trait = { version = "0.1" }
 The required imports:
 
 ```rs
+use async_trait::async_trait;
 use pingora::lb::{selection::RoundRobin, LoadBalancer};
-use pingora::proxy::{ProxyHttp, Session};
+use pingora::proxy::{http_proxy_service, ProxyHttp, Session};
 use pingora::upstreams::peer::HttpPeer;
 use pingora::Result;
 use std::sync::Arc;
@@ -71,8 +72,8 @@ Note: We do nothing with the incoming request (`Session`) or the context object 
 fn main() {
     // ..
     let upstreams = {
-        let lb = LoadBalancer::try_from_iter(["1.1.1.1:443", "1.0.0.1:443"]).unwrap();
-        Arc::new(lb)
+        let upstreams = LoadBalancer::try_from_iter(["1.1.1.1:443", "1.0.0.1:443"]).unwrap();
+        Arc::new(upstreams)
     }
 
     let proxy_service = {
@@ -80,7 +81,7 @@ fn main() {
             name: "one.one.one.one".to_string(),
             balancer: upstreams,
         };
-        let mut proxy = http_proxy_service(&server.configuration, Arc::new(service));
+        let mut proxy = http_proxy_service(&server.configuration, service);
         proxy.add_tcp("0.0.0.0:8001");
         proxy
     };

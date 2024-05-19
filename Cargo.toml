@@ -1,11 +1,9 @@
-[package]
-name = "lb-example"
-version = "0.1.0"
-edition = "2021"
-
 [workspace]
-members = [ "scratch","step1", "step2", "step3", "step4"]
-
-[dependencies]
-async-trait="0.1"
-pingora = { version = "0.2", features = ["lb"]}
+resolver = "2"
+members = [
+  "scratch",
+  "step1",
+  "step2",
+  "step3",
+  "step4"
+]

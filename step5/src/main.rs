@@ -1,5 +1,6 @@
 use async_trait::async_trait;
 use lazy_static::lazy_static;
+use pingora::http::RequestHeader;
 use pingora::lb::{health_check::TcpHealthCheck, selection::RoundRobin, LoadBalancer};
 use pingora::proxy::{http_proxy_service, ProxyHttp, Session};
 use pingora::server::{configuration::Opt, Server};
@@ -45,6 +46,18 @@ impl ProxyHttp for LBService {
         let peer = Box::new(HttpPeer::new(upstream, true, self.name.clone()));
 
         Ok(peer)
+    }
+
+    async fn upstream_request_filter(
+        &self,
+        _session: &mut Session,
+        upstream_request: &mut RequestHeader,
+        _ctx: &mut Self::CTX,
+    ) -> Result<()> {
+        upstream_request
+            .insert_header("Host", "one.one.one.one")
+            .unwrap();
+        Ok(())
     }
 }
 

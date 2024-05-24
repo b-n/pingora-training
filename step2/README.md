@@ -22,6 +22,7 @@ The required imports:
 
 ```rs
 use async_trait::async_trait;
+use pingora::http::RequestHeader;
 use pingora::lb::{selection::RoundRobin, LoadBalancer};
 use pingora::proxy::{http_proxy_service, ProxyHttp, Session};
 use pingora::upstreams::peer::HttpPeer;
@@ -64,7 +65,26 @@ impl ProxyHttp for LBService {
 
 👆 The ProxyHttp impl is needed to turn the LoadBalancer into a service. It's main use it to select a peer from the inner Loadbalancer.
 
-Note: We do nothing with the incoming request (`Session`) or the context object at this stage.
+Note: We do nothing with session or the context object at this stage.
+
+Also, `1.1.1.1` only accepts requests when the `Host` header is set correctly. We can use `upstream_request_filter` to edit the request before it's sent to the upstream.
+
+```rs
+impl ProxyHttp for LBService {
+    // ..
+    async fn upstream_request_filter(
+        &self,
+        _session: &mut Session,
+        upstream_request: &mut RequestHeader,
+        _ctx: &mut Self::CTX,
+    ) -> Result<()> {
+        upstream_request
+            .insert_header("Host", "one.one.one.one")
+            .unwrap();
+        Ok(())
+    }
+    // ..
+```
 
 ## 3. Add the service to the server
 
@@ -106,7 +126,7 @@ And curl a couple of times in a terminal somewhere:
 curl http://localhost:8001/
 ```
 
-The responses should be 403's, but the proxy should be outputing something similar to the following:
+The responses should be 200s with the contents of their homepage. The proxy should be outputing something similar to the following:
 
 ```
 Selected upstream: Backend { addr: Inet(1.0.0.1:443), weight: 1 }

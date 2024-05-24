@@ -1,6 +1,6 @@
 use async_trait::async_trait;
 use lazy_static::lazy_static;
-use pingora::http::ResponseHeader;
+use pingora::http::{RequestHeader, ResponseHeader};
 use pingora::lb::{
     health_check::TcpHealthCheck,
     selection::{BackendIter, BackendSelection, RoundRobin},
@@ -68,6 +68,18 @@ impl ProxyHttp for GatewayService {
         let peer = Box::new(HttpPeer::new(upstream, true, "one.one.one.one".to_string()));
 
         Ok(peer)
+    }
+
+    async fn upstream_request_filter(
+        &self,
+        _session: &mut Session,
+        upstream_request: &mut RequestHeader,
+        _ctx: &mut Self::CTX,
+    ) -> Result<()> {
+        upstream_request
+            .insert_header("Host", "one.one.one.one")
+            .unwrap();
+        Ok(())
     }
 
     async fn response_filter(

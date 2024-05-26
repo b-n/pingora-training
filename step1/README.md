@@ -9,9 +9,7 @@ cargo new pingora
 cd pingora
 ```
 
-## 2. Add pingora dependency to Cargo.toml
-
-`Cargo.toml`:
+## 2. Add pingora dependency to `Cargo.toml`
 
 ```toml
 [dependencies]

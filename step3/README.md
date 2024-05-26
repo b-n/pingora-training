@@ -22,7 +22,7 @@ And now curl it a 3 times:
 curl --verbose http://localhost:8001
 ```
 
-You should see two of the requests return a 403, and the last one a 502
+You should see two of the requests return a 200, and the last one a 502
 
 ## 2. Add a TCP Healthcheck
 
@@ -64,11 +64,11 @@ The `health_check_service` is declared, but never used.
 
 ```rs
     // ..
-    let (health_check, upstreams) = {
+    let (upstreams, health_check) = {
         // ..
         
         let health_check = background_service("health check", upstreams);
-        (health_check, health_checked_upstreams)
+        (health_checked_upstreams, health_check)
     };
     server.add_service(health_check);
     

@@ -39,9 +39,7 @@ impl ProxyHttp for LBService {
         upstream_request: &mut RequestHeader,
         _ctx: &mut Self::CTX,
     ) -> Result<()> {
-        upstream_request
-            .insert_header("Host", "one.one.one.one")
-            .unwrap();
+        upstream_request.insert_header("Host", &self.name).unwrap();
         Ok(())
     }
 }
@@ -50,17 +48,18 @@ fn main() {
     let mut server = Server::new(None).unwrap();
     server.bootstrap();
 
-    let (health_check, upstreams) = {
-        let mut upstreams: LoadBalancer<_> =
+    let (upstreams, health_check) = {
+        let mut upstreams =
             LoadBalancer::try_from_iter(["1.1.1.1:443", "1.0.0.1:443", "127.0.0.1:443"]).unwrap();
 
         let health_check = TcpHealthCheck::new();
         upstreams.set_health_check(health_check);
         upstreams.health_check_frequency = Some(Duration::from_secs(1));
 
-        let health_check_service = background_service("health check", upstreams);
-        let health_checked_upstreams = health_check_service.task();
-        (health_check_service, health_checked_upstreams)
+        let health_check = background_service("health check", upstreams);
+        let health_checked_upstreams = health_check.task();
+
+        (health_checked_upstreams, health_check)
     };
     server.add_service(health_check);
 

@@ -44,7 +44,7 @@ Utilise the metric counter in the upstream peer selector from the load balancer:
         let upstream = self.balancer.select(b"", 256).unwrap();
 
         REQUESTS
-            .with_label_values(&[&format!("{}", upstream.addr)])
+            .with_label_values(&[&upstream.addr.to_string()])
             .inc();
 
         let peer = Box::new(HttpPeer::new(upstream, true, self.name.clone()));

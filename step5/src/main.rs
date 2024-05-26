@@ -40,7 +40,7 @@ impl ProxyHttp for LBService {
         let upstream = self.balancer.select(b"", 256).unwrap();
 
         REQUESTS
-            .with_label_values(&[&format!("{}", upstream.addr)])
+            .with_label_values(&[&upstream.addr.to_string()])
             .inc();
 
         let peer = Box::new(HttpPeer::new(upstream, true, self.name.clone()));
@@ -67,7 +67,7 @@ fn main() {
     let opt = Opt::from_args();
     let mut server = Server::new(Some(opt)).unwrap();
 
-    let (health_check, upstreams) = {
+    let (upstreams, health_check) = {
         let mut upstreams: LoadBalancer<_> =
             LoadBalancer::try_from_iter(["1.1.1.1:443", "1.0.0.1:443", "127.0.0.1:443"]).unwrap();
 
@@ -77,7 +77,7 @@ fn main() {
 
         let health_check = background_service("health check", upstreams);
         let health_checked_upstreams = health_check.task();
-        (health_check, health_checked_upstreams)
+        (health_checked_upstreams, health_check)
     };
     server.add_service(health_check);
 

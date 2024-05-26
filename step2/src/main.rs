@@ -37,9 +37,7 @@ impl ProxyHttp for LBService {
         upstream_request: &mut RequestHeader,
         _ctx: &mut Self::CTX,
     ) -> Result<()> {
-        upstream_request
-            .insert_header("Host", "one.one.one.one")
-            .unwrap();
+        upstream_request.insert_header("Host", &self.name).unwrap();
         Ok(())
     }
 }
@@ -53,17 +51,17 @@ fn main() {
         Arc::new(upstreams)
     };
 
-    let proxy_service = {
+    let service = {
         let service = LBService {
             name: "one.one.one.one".to_string(),
             balancer: upstreams,
         };
-        let mut proxy = http_proxy_service(&server.configuration, service);
-        proxy.add_tcp("0.0.0.0:8001");
-        proxy
+        let mut lb = http_proxy_service(&server.configuration, service);
+        lb.add_tcp("0.0.0.0:8001");
+        lb
     };
 
-    server.add_service(proxy_service);
+    server.add_service(service);
 
     server.run_forever();
 }

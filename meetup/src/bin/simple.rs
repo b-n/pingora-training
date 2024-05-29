@@ -22,6 +22,8 @@ impl ProxyHttp for ResponseService {
     }
 
     async fn request_filter(&self, session: &mut Session, _ctx: &mut Self::CTX) -> Result<bool> {
+        // Note: The below is bad practise, but is here just for a simple server that can respond
+        // with 200s
         let body = "Hello!";
 
         let mut resp = ResponseHeader::build(200, Some(4)).unwrap();

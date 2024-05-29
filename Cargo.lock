@@ -935,6 +935,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ffbee8634e0d45d258acb448e7eaab3fce7a0a467395d4d9f228e3c1f01fb2e4"
 
 [[package]]
+name = "meetup"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "env_logger",
+ "lazy_static",
+ "pingora",
+ "prometheus",
+ "structopt",
+]
+
+[[package]]
 name = "memchr"
 version = "2.7.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"

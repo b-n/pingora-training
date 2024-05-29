@@ -65,7 +65,11 @@ impl ProxyHttp for GatewayService {
         };
         ctx.upstream = Some(upstream.addr.to_string());
 
-        let peer = Box::new(HttpPeer::new(upstream, true, "one.one.one.one".to_string()));
+        let peer = Box::new(HttpPeer::new(
+            upstream,
+            false,
+            "one.one.one.one".to_string(),
+        ));
 
         Ok(peer)
     }
@@ -124,9 +128,9 @@ fn main() {
     let mut server = Server::new(Some(opt)).unwrap();
 
     let (service_a_hc, service_a_upstreams) =
-        build_lb_service::<RoundRobin>(&["1.1.1.1:443", "127.0.0.1:443"]);
+        build_lb_service::<RoundRobin>(&["127.0.0.1:8888", "127.0.0.1:443"]);
     let (service_b_hc, service_b_upstreams) =
-        build_lb_service::<RoundRobin>(&["1.0.0.1:443", "127.0.0.1:334"]);
+        build_lb_service::<RoundRobin>(&["127.0.0.1:8889", "127.0.0.1:334"]);
 
     server.add_service(service_a_hc);
     server.add_service(service_b_hc);

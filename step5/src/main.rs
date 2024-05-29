@@ -43,7 +43,7 @@ impl ProxyHttp for LBService {
             .with_label_values(&[&upstream.addr.to_string()])
             .inc();
 
-        let peer = Box::new(HttpPeer::new(upstream, true, self.name.clone()));
+        let peer = Box::new(HttpPeer::new(upstream, false, self.name.clone()));
 
         Ok(peer)
     }

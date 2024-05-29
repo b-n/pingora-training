@@ -25,7 +25,7 @@ impl ProxyHttp for ResponseService {
         let body = "Hello!";
 
         let mut resp = ResponseHeader::build(200, Some(4)).unwrap();
-        resp.insert_header("Server", "simple").unwrap();
+        resp.insert_header("Server", "one.one.one.one").unwrap();
         resp.insert_header("Content-length", body.len()).unwrap();
         resp.insert_header("Cache-control", "private, no-store")
             .unwrap();

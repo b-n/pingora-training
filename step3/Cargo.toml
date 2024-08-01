@@ -4,5 +4,5 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-pingora = { version = "0.2", features = ["lb"] }
+pingora = { version = "0.3", features = ["lb"] }
 async-trait = { version = "0.1" }
